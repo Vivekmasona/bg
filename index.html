@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Background Audio PWA</title>
+    <!-- Add your meta tags and other PWA-related code here -->
+  </head>
+  <body>
+    <h1>Background Audio PWA</h1>
+
+    <button id="playButton">Play Audio</button>
+
+    <script>
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(function(error) {
+            console.error('Service Worker registration failed:', error);
+          });
+      }
+
+      // Audio playback logic
+      const audio = new Audio('your-audio-file.mp3');
+      let isPlaying = false;
+
+      document.getElementById('playButton').addEventListener('click', function() {
+        if (isPlaying) {
+          audio.pause();
+          isPlaying = false;
+        } else {
+          audio.play();
+          isPlaying = true;
+        }
+      });
+
+      // Handle background playback using Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', function(event) {
+          if (event.data === 'playAudioInBackground') {
+            audio.play();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
